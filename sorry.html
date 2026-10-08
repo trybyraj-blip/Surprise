@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>I'm Sorry 💖</title>
+<style>
+:root{--bg1:#ffe4ec;--bg2:#ffd0e0;--card:#fff;--text:#4a1630;--sub:#8a4a66;--yes:#e91e63;--no:#9e9e9e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a1020;--bg2:#3d1730;--card:#1f0e18;--text:#ffe4ee;--sub:#e6a6c0;--no:#777}}
+:root[data-theme="dark"]{--bg1:#2a1020;--bg2:#3d1730;--card:#1f0e18;--text:#ffe4ee;--sub:#e6a6c0;--no:#777}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--text);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card{background:var(--card);width:min(92vw,400px);border-radius:28px;padding:32px 22px 28px;text-align:center;box-shadow:0 20px 50px rgba(233,30,99,.25);position:relative;z-index:2}
+.emoji{font-size:72px;line-height:1;transition:transform .3s}
+h1{font-size:26px;margin:14px 0 8px}
+p{font-size:17px;line-height:1.5;color:var(--sub);margin:0 0 22px;min-height:76px}
+.btns{display:flex;align-items:center;justify-content:center;gap:14px;min-height:90px;flex-wrap:wrap}
+button{border:0;border-radius:999px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .25s;color:#fff}
+#yes{background:var(--yes);font-size:20px;padding:14px 34px;box-shadow:0 6px 16px rgba(233,30,99,.4)}
+#no{background:var(--no);font-size:17px;padding:12px 26px}
+button:active{transform:scale(.94)}
+.hearts{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.h{position:absolute;bottom:-40px;animation:up linear forwards}
+@keyframes up{to{transform:translateY(-110vh) rotate(30deg);opacity:0}}
+.pop{animation:pop .4s}
+@keyframes pop{50%{transform:scale(1.25)}}
+#done{display:none}
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts"></div>
+
+<div class="card" id="ask">
+  <div class="emoji" id="emoji">🥺</div>
+  <h1 id="title">I'm really sorry</h1>
+  <p id="msg">I made a mistake and I feel terrible. Will you give me another chance?</p>
+  <div class="btns">
+    <button id="yes">Yes 💖</button>
+    <button id="no">No</button>
+  </div>
+</div>
+
+<div class="card" id="done">
+  <div class="emoji">🥰</div>
+  <h1>Thank you, my love!</h1>
+  <p style="min-height:0">I promise to make you smile every day. I love you so much 💕</p>
+</div>
+
+<script>
+// ✏️ Change the name here
+var NAME = "My Love";
+
+var steps = [
+  {e:"🥺", t:"I'm really sorry, " + NAME, m:"I made a mistake and I feel terrible. Will you give me another chance?"},
+  {e:"😢", t:"Please think again…", m:"I'm truly sorry. I promise I'll do better. Will you give me one more chance?"},
+  {e:"😭", t:"Pretty please?", m:"I can't stop thinking about you. Please say yes, I really am sorry!"},
+  {e:"🥹", t:"Don't break my heart", m:"I'll listen more, I'll care more. Just one more chance, please?"},
+  {e:"🐶", t:"Look at this sad puppy", m:"This puppy is sorry too. Can you really say no to this face?"},
+  {e:"💔", t:"Last try!", m:"I'm out of words, but not out of love. Say yes, please?"},
+  {e:"💖", t:"Okay, the No button is gone", m:"Looks like there's only one answer left. Click Yes! 😘"}
+];
+var i = 0, yes = document.getElementById("yes"), no = document.getElementById("no");
+
+function render(){
+  var s = steps[i];
+  document.getElementById("emoji").textContent = s.e;
+  document.getElementById("title").textContent = s.t;
+  document.getElementById("msg").textContent = s.m;
+  document.getElementById("emoji").classList.remove("pop");
+  void document.getElementById("emoji").offsetWidth;
+  document.getElementById("emoji").classList.add("pop");
+  yes.style.fontSize = (20 + i * 4) + "px";
+  yes.style.padding = (14 + i * 3) + "px " + (34 + i * 7) + "px";
+  no.style.fontSize = Math.max(17 - i * 2, 9) + "px";
+  no.style.padding = Math.max(12 - i * 2, 4) + "px " + Math.max(26 - i * 4, 8) + "px";
+  if (i >= steps.length - 1) no.style.display = "none";
+}
+
+no.addEventListener("click", function(){
+  if (i < steps.length - 1) i++;
+  render();
+});
+
+function hearts(n){
+  var box = document.getElementById("hearts"), set = ["💖","💕","💗","❤️","💘","🌹"];
+  for (var k = 0; k < n; k++){
+    var h = document.createElement("span");
+    h.className = "h";
+    h.textContent = set[Math.floor(Math.random() * set.length)];
+    h.style.left = Math.random() * 100 + "%";
+    h.style.fontSize = (18 + Math.random() * 30) + "px";
+    h.style.animationDuration = (3 + Math.random() * 4) + "s";
+    h.style.animationDelay = (Math.random() * 2) + "s";
+    box.appendChild(h);
+    setTimeout(function(el){ return function(){ el.remove(); }; }(h), 9000);
+  }
+}
+
+yes.addEventListener("click", function(){
+  document.getElementById("ask").style.display = "none";
+  document.getElementById("done").style.display = "block";
+  hearts(60);
+  setInterval(function(){ hearts(12); }, 2500);
+});
+
+hearts(10);
+render();
+</script>
+</body>
+</html>
